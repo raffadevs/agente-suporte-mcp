@@ -1,7 +1,9 @@
 package dev.raffadevs.chamados;
 
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.springframework.ai.model.ollama.autoconfigure.OllamaEmbeddingAutoConfiguration;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -15,7 +17,14 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+/**
+ * O VectorStore é mockado (abaixo), mas a autoconfiguração do Ollama ainda criaria um bean
+ * real de embedding por conta própria — e esse bean checa a disponibilidade do modelo via
+ * rede ao subir o contexto. Por isso a autoconfiguração correspondente é excluída aqui,
+ * só nos testes (em produção o serviço precisa dela de verdade).
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration(exclude = OllamaEmbeddingAutoConfiguration.class)
 @Import(IntegrationTestBase.TestRestTemplateConfig.class)
 public abstract class IntegrationTestBase {
 
