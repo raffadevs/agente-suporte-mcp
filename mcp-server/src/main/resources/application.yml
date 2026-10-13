@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: mcp-server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mcp_server
+    username: mcp_server
+    password: change-me
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  ai:
+    mcp:
+      server:
+        name: mcp-server
+        version: 0.1.0
+        instructions: >
+          Ferramentas do sistema de suporte: buscar artigo, consultar status de serviço, consultar usuário,
+          abrir chamado, atualizar chamado e desbloquear conta. As três últimas são ações de escrita e exigem
+          aprovação humana antes de serem executadas de fato — chame a ferramenta sem o parâmetro aprovacaoId
+          primeiro; se a resposta indicar que está aguardando aprovação, informe isso e pare, sem tentar de novo
+          até que uma aprovação seja concedida.
+
+server:
+  port: ${SERVER_PORT:8081}
+
+app:
+  sistema-chamados:
+    base-url: ${SISTEMA_CHAMADOS_BASE_URL:http://localhost:8080}
+  agente:
+    base-url: ${AGENTE_BASE_URL:http://localhost:8082}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

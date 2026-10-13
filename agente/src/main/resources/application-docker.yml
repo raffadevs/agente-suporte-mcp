@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/agente
+    username: ${POSTGRES_USER:app}
+    password: ${POSTGRES_PASSWORD:change-me}
+  ai:
+    ollama:
+      base-url: http://ollama:11434
+    mcp:
+      client:
+        sse:
+          connections:
+            mcp-server:
+              url: http://mcp-server:8081
+              sse-endpoint: /sse
+
+app:
+  sistema-chamados:
+    base-url: http://sistema-chamados:8080

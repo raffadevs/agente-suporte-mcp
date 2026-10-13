@@ -1,0 +1,13 @@
+sistema-chamados/target/
+mcp-server/target/
+agente/target/
+frontend/node_modules/
+frontend/dist/
+
+.env
+*.log
+
+.idea/
+.vscode/
+*.iml
+.DS_Store

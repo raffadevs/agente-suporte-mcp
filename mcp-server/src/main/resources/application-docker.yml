@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/mcp_server
+    username: ${POSTGRES_USER:app}
+    password: ${POSTGRES_PASSWORD:change-me}
+
+app:
+  sistema-chamados:
+    base-url: http://sistema-chamados:8080
+  agente:
+    base-url: http://agente:8082

@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: sistema-chamados
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chamados
+    username: chamados
+    password: change-me
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      init:
+        pull-model-strategy: ${OLLAMA_PULL_STRATEGY:when_missing}
+      embedding:
+        model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        table-name: artigo_trecho
+        dimensions: ${EMBEDDING_DIMENSOES:768}
+        index-type: hnsw
+        distance-type: cosine_distance
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  busca:
+    limite-artigos: 4
+    similaridade-minima: 0.5
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

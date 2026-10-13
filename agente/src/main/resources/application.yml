@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: agente
+  datasource:
+    url: jdbc:postgresql://localhost:5432/agente
+    username: agente
+    password: change-me
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      init:
+        pull-model-strategy: ${OLLAMA_PULL_STRATEGY:when_missing}
+      chat:
+        model: ${OLLAMA_CHAT_MODEL:llama3.2:1b}
+    mcp:
+      client:
+        name: agente
+        version: 0.1.0
+        request-timeout: 60s
+        type: SYNC
+        toolcallback:
+          enabled: true
+        sse:
+          connections:
+            mcp-server:
+              url: ${MCP_SERVER_BASE_URL:http://localhost:8081}
+              sse-endpoint: /sse
+
+server:
+  port: ${SERVER_PORT:8082}
+
+app:
+  sistema-chamados:
+    base-url: ${SISTEMA_CHAMADOS_BASE_URL:http://localhost:8080}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
