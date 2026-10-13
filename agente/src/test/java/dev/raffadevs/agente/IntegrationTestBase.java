@@ -1,9 +1,12 @@
 package dev.raffadevs.agente;
 
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.mcp.client.autoconfigure.McpClientAutoConfiguration;
 import org.springframework.ai.mcp.client.autoconfigure.McpToolCallbackAutoConfiguration;
 import org.springframework.ai.mcp.client.autoconfigure.SseHttpClientTransportAutoConfiguration;
+import org.springframework.ai.model.chat.client.autoconfigure.ChatClientAutoConfiguration;
+import org.springframework.ai.model.ollama.autoconfigure.OllamaChatAutoConfiguration;
 import org.springframework.ai.tool.StaticToolCallbackProvider;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -22,15 +25,17 @@ import org.testcontainers.utility.DockerImageName;
  * As integrações reais (MCP client -> mcp-server, chat model -> Ollama) exigem uma rede que
  * não existe no pipeline de CI deste projeto — mesma limitação registrada no projeto
  * assistente-de-licitacoes-ia. Os testes de integração aqui desligam a autoconfiguração real
- * do cliente MCP (que tentaria abrir uma conexão SSE de verdade ao subir o contexto) e
- * substituem por um provedor de ferramentas vazio; a validação do laço de raciocínio com um
+ * do cliente MCP e do modelo de chat (ambas tentariam uma conexão de rede de verdade ao
+ * subir o contexto) e substituem por dublês; a validação do laço de raciocínio com um
  * modelo real é feita manualmente via docker compose.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(exclude = {
         McpClientAutoConfiguration.class,
         McpToolCallbackAutoConfiguration.class,
-        SseHttpClientTransportAutoConfiguration.class
+        SseHttpClientTransportAutoConfiguration.class,
+        OllamaChatAutoConfiguration.class,
+        ChatClientAutoConfiguration.class
 })
 public abstract class IntegrationTestBase {
 
@@ -56,6 +61,11 @@ public abstract class IntegrationTestBase {
         @Bean
         public ToolCallbackProvider toolCallbackProvider() {
             return new StaticToolCallbackProvider();
+        }
+
+        @Bean
+        public ChatClient.Builder chatClientBuilder() {
+            return org.mockito.Mockito.mock(ChatClient.Builder.class);
         }
 
         @Bean
