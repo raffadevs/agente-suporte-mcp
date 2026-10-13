@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -37,6 +38,7 @@ import org.testcontainers.utility.DockerImageName;
         OllamaChatAutoConfiguration.class,
         ChatClientAutoConfiguration.class
 })
+@Import(IntegrationTestBase.TestConfig.class)
 public abstract class IntegrationTestBase {
 
     static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
